@@ -4,7 +4,7 @@ import mujoco_viewer
 
 class Pendulum():
     def __init__(self) -> None:
-        self.dt = 0.001
+        self.dt = 0.01
         self.b = 0.05
         self.l = 0.3
         self.m = 1.
@@ -12,6 +12,7 @@ class Pendulum():
         self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data)
 
     def create_mujoco_model(self):
+
         pendulum = f"""
         <mujoco>
         <option timestep="{self.dt}" integrator="RK4">
@@ -27,14 +28,15 @@ class Pendulum():
             <light pos="0 -.4 1"/>
             <camera name="fixed" pos="0 -2 0.2" xyaxes="1 0 0 0 0 1"/>
 
-            <PUT YOUR OBJECT HERE>
 
+            <!-- Pendulum -->
+            <body name="pendulum" pos="0 0 0.15">
+                <geom type="cylinder" size="0.02 0.2" rgba="0.4 0.4 0.8 1"/>
+                <joint name="hinge" type="hinge" axis="0 1 0" pos="0 0 0"/>
             </body>
+
         </worldbody>
 
-        <actuator>
-            <motor name="my_motor" joint="joint0" gear="1"/>
-        </actuator>
         </mujoco>
         """
         
@@ -56,3 +58,11 @@ class Pendulum():
 
     def get_state(self):
         raise NotImplementedError
+
+
+if __name__ == "__main__":
+    pendulum = Pendulum()
+    pendulum.init_episode()
+    for _ in range(1000):
+        pendulum.step_sim(0.1, render=True)
+    pendulum.viewer.close()
