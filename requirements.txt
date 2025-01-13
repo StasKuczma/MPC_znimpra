@@ -1,0 +1,5 @@
+numpy
+matplotlib
+casadi==3.6.3
+mujoco==3.2.0
+mujoco-python-viewer
